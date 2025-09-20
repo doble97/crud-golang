@@ -180,6 +180,7 @@ func addCustomers(w http.ResponseWriter, r *http.Request) {
 	})
 }
 func main() {
+	fileServer := http.FileServer(http.Dir("./static"))
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/customers", getCustomers).Methods("GET")
 	router.HandleFunc("/customers/{id}", getCustomer).Methods("GET")
@@ -187,6 +188,7 @@ func main() {
 	router.HandleFunc("/customers/{id}", updateCustomer).Methods("PUT")
 	router.HandleFunc("/customers/{id}", deleteCustomer).Methods("DELETE")
 	router.HandleFunc("/customers-several", addCustomers).Methods("POST")
+	router.PathPrefix("/").Handler(fileServer)
 	fmt.Println("LISTENING ON PORT 3333")
 	http.ListenAndServe(":3333", router)
 }
